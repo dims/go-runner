@@ -50,5 +50,4 @@ LABEL maintainers="Kubernetes Authors"
 LABEL description="go based runner for distroless scenarios"
 WORKDIR /
 COPY --from=builder /workspace/go-runner .
-USER nobody
 ENTRYPOINT ["/go-runner"]
