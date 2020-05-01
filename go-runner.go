@@ -66,7 +66,7 @@ func configureAndRun() error {
 		if *alsoToStdOut {
 			outputStream = io.MultiWriter(os.Stdout, logFile)
 		} else {
-			outputStream = os.Stdout
+			outputStream = logFile
 		}
 	}
 
@@ -98,10 +98,11 @@ func configureAndRun() error {
 // cmdInfo generates a useful look at what the command is for printing/debug.
 func cmdInfo(cmd *exec.Cmd) string {
 	return fmt.Sprintf(
-		`Command env: %v
+		`Command env: (log-file=%v, also-stdout=%v, redirect-stderr=%v)
 Run from directory: %v
 Executable path: %v
-Args (comma-delimited): %v`, cmd.Env, cmd.Dir, cmd.Path, strings.Join(cmd.Args, ","),
+Args (comma-delimited): %v`, *logFilePath, *alsoToStdOut, *redirectStderr,
+		cmd.Dir, cmd.Path, strings.Join(cmd.Args, ","),
 	)
 }
 

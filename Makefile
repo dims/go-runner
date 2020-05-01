@@ -21,7 +21,7 @@ REGISTRY ?= k8s.gcr.io
 IMGNAME = go-runner
 IMAGE = $(REGISTRY)/$(IMGNAME)
 
-PLATFORMS = linux/amd64 linux/arm64 linux/arm linux/ppc64le linux/s390x
+PLATFORMS = linux/amd64 linux/arm64 # linux/arm linux/ppc64le linux/s390x
 
 EMPTY :=
 SPACE := $(EMPTY) $(EMPTY)
