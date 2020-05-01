@@ -24,7 +24,6 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
-	"path/filepath"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -32,7 +31,7 @@ import (
 
 var (
 	logFilePath    = flag.String("log-file", "", "If non-empty, save stdout to this file")
-	alsoToStdOut   = flag.Bool("also-stdout", true, "useful with log-file, log to standard output as well as the log file")
+	alsoToStdOut   = flag.Bool("also-stdout", false, "useful with log-file, log to standard output as well as the log file")
 	redirectStderr = flag.Bool("redirect-stderr", true, "treat stderr same as stdout")
 )
 
@@ -53,15 +52,9 @@ func configureAndRun() error {
 	errStream = os.Stderr
 
 	if logFilePath != nil && *logFilePath != "" {
-		if parent := filepath.Dir(*logFilePath); parent != "." {
-			err := os.MkdirAll(parent, 0755)
-			if err != nil {
-				return errors.Wrapf(err, "failed to create directory %v", parent)
-			}
-		}
-		logFile, err := os.Create(*logFilePath)
+		logFile, err := os.OpenFile(*logFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
-			return errors.Wrapf(err, "failed to create log file %v", logFilePath)
+			return errors.Wrapf(err, "failed to create log file %v", *logFilePath)
 		}
 		if *alsoToStdOut {
 			outputStream = io.MultiWriter(os.Stdout, logFile)
